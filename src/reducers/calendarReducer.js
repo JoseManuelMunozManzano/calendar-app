@@ -14,6 +14,18 @@ const initalState = {
         name: 'José Manuel',
       },
     },
+
+    {
+      title: 'Santo de mi mujer',
+      start: moment().add(2, 'days').toDate(),
+      end: moment().add(2, 'days').add(2, 'hours').toDate(),
+      bgcolor: '#fafafa',
+      notes: 'Comprar zapatos',
+      user: {
+        _id: '123',
+        name: 'José Manuel',
+      },
+    },
   ],
   activeEvent: null, // Objeto con todas las propiedades del evento activo
 };
@@ -30,6 +42,12 @@ export const calendarReducer = (state = initalState, action) => {
       return {
         ...state,
         events: [...state.events, action.payload],
+      };
+
+    case types.eventClearActiveEvent:
+      return {
+        ...state,
+        activeEvent: null,
       };
 
     default:
