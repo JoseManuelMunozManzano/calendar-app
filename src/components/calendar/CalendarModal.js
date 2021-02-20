@@ -7,6 +7,7 @@ import moment from 'moment';
 import Swal from 'sweetalert2';
 
 import { uiCloseModal } from '../../actions/ui';
+import { eventAddNew } from '../../actions/events';
 
 const customStyles = {
   content: {
@@ -88,7 +89,17 @@ export const CalendarModal = () => {
       return setTitleValid(false);
     }
 
-    // TODO: realizar grabación
+    // Hacer la grabación
+    dispatch(
+      eventAddNew({
+        ...formValues,
+        id: new Date().getTime(), // id temporal mientras no esté la parte back-end
+        user: {
+          _id: '123',
+          name: 'Adriana',
+        },
+      })
+    );
 
     setTitleValid(true);
     closeModal();
