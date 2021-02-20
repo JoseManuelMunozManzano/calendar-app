@@ -7,7 +7,11 @@ import moment from 'moment';
 import Swal from 'sweetalert2';
 
 import { uiCloseModal } from '../../actions/ui';
-import { eventAddNew, eventClearActiveEvent } from '../../actions/events';
+import {
+  eventAddNew,
+  eventClearActiveEvent,
+  eventUpdated,
+} from '../../actions/events';
 
 const customStyles = {
   content: {
@@ -37,8 +41,8 @@ export const CalendarModal = () => {
   const { activeEvent } = useSelector(state => state.calendar);
   const dispatch = useDispatch();
 
-  const [dateStart, setDateStart] = useState(now.toDate());
-  const [dateEnd, setDateEnd] = useState(nowPlus1.toDate());
+  //const [dateStart, setDateStart] = useState(now.toDate());
+  //const [dateEnd, setDateEnd] = useState(nowPlus1.toDate());
   const [titleValid, setTitleValid] = useState(true);
 
   const [formValues, setFormValues] = useState(initEvent);
@@ -61,13 +65,13 @@ export const CalendarModal = () => {
   const closeModal = () => {
     dispatch(uiCloseModal());
     dispatch(eventClearActiveEvent());
-    setDateStart(now.toDate());
-    setDateEnd(nowPlus1.toDate());
+    //setDateStart(now.toDate());
+    //setDateEnd(nowPlus1.toDate());
     setFormValues(initEvent);
   };
 
   const handleStartDateChange = e => {
-    setDateStart(e);
+    //setDateStart(e);
     setFormValues({
       ...formValues,
       start: e,
@@ -75,7 +79,7 @@ export const CalendarModal = () => {
   };
 
   const handleEndDateChange = e => {
-    setDateEnd(e);
+    //setDateEnd(e);
     setFormValues({
       ...formValues,
       end: e,
@@ -102,17 +106,22 @@ export const CalendarModal = () => {
       return setTitleValid(false);
     }
 
-    // Hacer la grabación
-    dispatch(
-      eventAddNew({
-        ...formValues,
-        id: new Date().getTime(), // id temporal mientras no esté la parte back-end
-        user: {
-          _id: '123',
-          name: 'Adriana',
-        },
-      })
-    );
+    if (activeEvent) {
+      // Actualizar
+      dispatch(eventUpdated(formValues));
+    } else {
+      // Hacer la grabación
+      dispatch(
+        eventAddNew({
+          ...formValues,
+          id: new Date().getTime(), // id temporal mientras no esté la parte back-end
+          user: {
+            _id: '123',
+            name: 'Adriana',
+          },
+        })
+      );
+    }
 
     setTitleValid(true);
     closeModal();
