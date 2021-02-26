@@ -1,36 +1,59 @@
 import React, { useEffect } from 'react';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {
-  Redirect,
-  Route,
-  BrowserRouter as Router,
-  Switch,
-} from 'react-router-dom';
+import { Redirect, BrowserRouter as Router, Switch } from 'react-router-dom';
 
+import { PublicRoute } from './PublicRoute';
+import { PrivateRoute } from './PrivateRoute';
 import { LoginScreen } from '../components/auth/LoginScreen';
 import { CalendarScreen } from '../components/calendar/CalendarScreen';
 import { startChecking } from '../actions/auth';
 
+import '../styles.css';
+
 export const AppRouter = () => {
   const dispatch = useDispatch();
+  const { checking, uid } = useSelector(state => state.auth);
 
   useEffect(() => {
     dispatch(startChecking());
   }, [dispatch]);
 
+  // Cuando el checking retorne false ya se seguro que estoy autenticado
+  // Puedo hacer el render
+  if (checking) {
+    return (
+      <div className="sk-chase-main">
+        <div className="sk-chase">
+          <div className="sk-chase-dot"></div>
+          <div className="sk-chase-dot"></div>
+          <div className="sk-chase-dot"></div>
+          <div className="sk-chase-dot"></div>
+          <div className="sk-chase-dot"></div>
+          <div className="sk-chase-dot"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Router>
       <div>
         <Switch>
-          {/* Usando el component */}
-          <Route exact path="/login" component={LoginScreen} />
+          <PublicRoute
+            exact
+            path="/login"
+            component={LoginScreen}
+            isAuthenticated={!!uid}
+          />
 
-          {/* Usando Higher Order Component */}
-          <Route exact path="/">
-            <CalendarScreen />
-          </Route>
+          <PrivateRoute
+            exact
+            path="/"
+            component={CalendarScreen}
+            isAuthenticated={!!uid}
+          />
 
           <Redirect to="/" />
         </Switch>
