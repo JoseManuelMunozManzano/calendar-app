@@ -139,7 +139,7 @@ export const CalendarModal = () => {
               onChange={handleStartDateChange}
               value={start}
               className="form-control"
-              format="d/M/yyyy H:mm a"
+              // format="d/M/yyyy H:mm a"
             />
           </div>
 
@@ -150,7 +150,7 @@ export const CalendarModal = () => {
               value={end}
               className="form-control"
               minDate={start}
-              format="d/M/yyyy H:mm a"
+              // format="d/M/yyyy H:mm a"
             />
           </div>
 
