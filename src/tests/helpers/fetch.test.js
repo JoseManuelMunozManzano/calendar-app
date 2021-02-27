@@ -1,6 +1,8 @@
-import { fetchSinToken } from '../../helpers/fetch';
+import { fetchConToken, fetchSinToken } from '../../helpers/fetch';
 
 describe('Pruebas en el helper fetch', () => {
+  let token = '';
+
   test('fetchSinToken debe de funcionar', async () => {
     const resp = await fetchSinToken(
       'auth',
@@ -19,5 +21,21 @@ describe('Pruebas en el helper fetch', () => {
     // console.log(resp);
     const body = await resp.json();
     expect(body.ok).toBe(true);
+
+    token = body.token;
+  });
+
+  test('fetchConnToken debe de funcionar', async () => {
+    localStorage.setItem('token', token);
+
+    const resp = await fetchConToken(
+      'events/60355c681094cf4800c38387',
+      {},
+      'DELETE'
+    );
+
+    const body = await resp.json();
+
+    expect(body.msg).toBe('Evento no existe para ese id');
   });
 });
