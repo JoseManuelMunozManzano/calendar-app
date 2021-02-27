@@ -10,7 +10,7 @@ import { uiCloseModal } from '../../actions/ui';
 import {
   eventStartAddNew,
   eventClearActiveEvent,
-  eventUpdated,
+  eventStartUpdate,
 } from '../../actions/events';
 
 const customStyles = {
@@ -110,7 +110,7 @@ export const CalendarModal = () => {
 
     if (activeEvent) {
       // Actualizar
-      dispatch(eventUpdated(formValues));
+      dispatch(eventStartUpdate(formValues));
     } else {
       // Hacer la grabación
       dispatch(eventStartAddNew(formValues));
