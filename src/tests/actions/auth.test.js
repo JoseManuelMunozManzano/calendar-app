@@ -3,7 +3,12 @@ import thunk from 'redux-thunk';
 import Swal from 'sweetalert2';
 
 import '@testing-library/jest-dom';
-import { startChecking, startLogin, startRegister } from '../../actions/auth';
+import {
+  startChecking,
+  startLogin,
+  startLogout,
+  startRegister,
+} from '../../actions/auth';
 import { types } from '../../types/types';
 import * as fetchModule from '../../helpers/fetch';
 
@@ -19,6 +24,7 @@ const initState = {};
 const store = mockStore(initState);
 
 Storage.prototype.setItem = jest.fn();
+Storage.prototype.clear = jest.fn();
 
 describe('Pruebas en las acciones auth.js', () => {
   beforeEach(() => {
@@ -128,5 +134,18 @@ describe('Pruebas en las acciones auth.js', () => {
     });
 
     expect(localStorage.setItem).toHaveBeenCalledWith('token', 'ABC123ABC123');
+  });
+
+  test('startLogout correcto', async () => {
+    await store.dispatch(startLogout());
+    const actions = store.getActions();
+
+    expect(localStorage.clear).toHaveBeenCalled();
+    expect(actions[0]).toEqual({
+      type: types.eventLogout,
+    });
+    expect(actions[1]).toEqual({
+      type: types.authLogout,
+    });
   });
 });
