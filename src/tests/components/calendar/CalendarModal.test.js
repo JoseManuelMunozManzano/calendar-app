@@ -8,10 +8,15 @@ import moment from 'moment';
 
 import '@testing-library/jest-dom';
 import { CalendarModal } from '../../../components/calendar/CalendarModal';
+import {
+  eventClearActiveEvent,
+  eventStartUpdate,
+} from '../../../actions/events';
 
-// jest.mock('../../../actions/events', () => ({
-//   eventSetActive: jest.fn(),
-// }));
+jest.mock('../../../actions/events', () => ({
+  eventStartUpdate: jest.fn(),
+  eventClearActiveEvent: jest.fn(),
+}));
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
@@ -57,5 +62,31 @@ describe('Pruebas en <CalendarModal />', () => {
     //expect(wrapper.find('.modal').exists()).toBe(true);
 
     expect(wrapper.find('Modal').prop('isOpen')).toBe(true);
+  });
+
+  test('debe de llamar la acción de actualizar y cerrar modal', () => {
+    wrapper.find('form').simulate('submit', {
+      preventDefault() {},
+    });
+
+    expect(eventStartUpdate).toHaveBeenCalledWith(
+      initState.calendar.activeEvent
+    );
+
+    expect(eventClearActiveEvent).toHaveBeenCalled();
+
+    // Aquí se limpió el formulario
+  });
+
+  test('debe de mostrar error si falta el título', () => {
+    // Aquí el formulario esta vacío.
+    // Esta prueba debe de lanzarse después de la de arriba a la fuerza.
+    wrapper.find('form').simulate('submit', {
+      preventDefault() {},
+    });
+
+    expect(wrapper.find('input[name="title"]').hasClass('is-invalid')).toBe(
+      true
+    );
   });
 });
