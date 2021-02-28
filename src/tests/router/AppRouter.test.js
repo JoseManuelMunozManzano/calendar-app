@@ -11,21 +11,21 @@ import { AppRouter } from '../../router/AppRouter';
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
-const initState = {
-  auth: {
-    checking: true,
-  },
-};
-const store = mockStore(initState);
 // store.dispatch = jest.fn();
 
 describe('Pruebas en <AppRouter />', () => {
   beforeEach(() => {
-    store.clearActions();
     jest.clearAllMocks();
   });
 
   test('debe de mostrar el Spinner', () => {
+    const initState = {
+      auth: {
+        checking: true,
+      },
+    };
+    const store = mockStore(initState);
+
     const wrapper = mount(
       <Provider store={store}>
         <AppRouter />
@@ -34,5 +34,50 @@ describe('Pruebas en <AppRouter />', () => {
 
     //expect(wrapper).toMatchSnapshot();
     expect(wrapper.find('.sk-chase-main').exists()).toBe(true);
+  });
+
+  test('debe de mostrar la ruta pública', () => {
+    const initState = {
+      auth: {
+        checking: false,
+        uid: null,
+      },
+    };
+    const store = mockStore(initState);
+
+    const wrapper = mount(
+      <Provider store={store}>
+        <AppRouter />
+      </Provider>
+    );
+
+    expect(wrapper).toMatchSnapshot();
+    expect(wrapper.find('.login-container').exists()).toBe(true);
+  });
+
+  test('debe de mostrar la ruta privada', () => {
+    const initState = {
+      ui: {
+        modalOpen: false,
+      },
+      calendar: {
+        events: [],
+      },
+      auth: {
+        checking: false,
+        uid: '123',
+        name: 'José',
+      },
+    };
+    const store = mockStore(initState);
+
+    const wrapper = mount(
+      <Provider store={store}>
+        <AppRouter />
+      </Provider>
+    );
+
+    expect(wrapper).toMatchSnapshot();
+    expect(wrapper.find('.calendar-screen').exists()).toBe(true);
   });
 });
